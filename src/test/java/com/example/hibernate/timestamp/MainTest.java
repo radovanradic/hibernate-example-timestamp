@@ -55,7 +55,7 @@ public class MainTest {
 
     Animal animal = new Animal();
     animal.setTitle("Mosquito");
-    animal.setCreateTime(Instant.EPOCH.plus(0, ChronoUnit.HOURS));
+    animal.setCreateTime(Instant.EPOCH);
 
     session.beginTransaction();
     session.save(animal);
@@ -100,13 +100,13 @@ public class MainTest {
 
     });
     
-    // If zone is changes, dates should still be equal, but it appears it doesn't work with MSSQL and PGSQL jdbc drivers
+    // If zone is changed, dates should still be equal, but it appears it doesn't work with MSSQL and PGSQL jdbc drivers
     loadedAnimal = session.load(Animal.class, animal.getId());
     Assert.assertEquals(animal.getCreateTime(), loadedAnimal.getCreateTime());
 
     session.evict(loadedAnimal);
 
-    // The same check if previous one passed, this one pass too
+    // The same check if previous one passed, this one with UTC should pass too
     TimeZone.setDefault(utcTimeZone);
     loadedAnimal = session.load(Animal.class, animal.getId());
     Assert.assertEquals(animal.getCreateTime(), loadedAnimal.getCreateTime());
